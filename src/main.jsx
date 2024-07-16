@@ -5,6 +5,7 @@ import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Login from "./Authentication/Login.jsx";
 import Register from "./Authentication/Register.jsx";
+import 'react-toastify/dist/ReactToastify.css';
 
 const routes = createBrowserRouter([
   {
