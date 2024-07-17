@@ -1,9 +1,10 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Navbar from "./Components/Shared/Navbar";
+import AdminDash from "./Pages/AdminDash/SideBarAdmin";
 
 function App() {
   const navigate = useNavigate();
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -12,13 +13,25 @@ function App() {
     }
   }, [navigate]);
 
+  useEffect(() => {
+    const userData = localStorage.getItem("user");
+    if (userData) {
+      setUser(JSON.parse(userData));
+    }
+  }, []);
+
+  console.log(user);
+
   return (
     <>
       <div>
-        <Navbar />
-        <h1 className="text-6xl font-extrabold uppercase mt-20 text-center">
-          Hello Dashboard
-        </h1>
+        {user && (
+          <div>
+            {user.role === "Admin" && <AdminDash />}
+            {user.role === "User" && "User Dashboard"}
+            {user.role === "Agent" && "Agent Dashboard"}
+          </div>
+        )}
       </div>
     </>
   );
