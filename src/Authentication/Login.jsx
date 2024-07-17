@@ -12,6 +12,10 @@ const Login = () => {
     const email = form.email.value;
     const pin = form.pin.value;
 
+    if (pin.length < 5) {
+      return toast.warn("Pin should be at least 5 digit");
+    }
+
     const alllogindata = {
       email,
       pin,
@@ -19,18 +23,22 @@ const Login = () => {
 
     try {
       const res = await axios.post("http://localhost:8000/login", alllogindata);
-      console.log(res);
       if (res.status === 200) {
         toast.success("Login successful!");
-        setInterval(() => {
+
+        // Store the token and user in the localStorage
+        localStorage.setItem("token", res.data.token);
+        localStorage.setItem("user", JSON.stringify(res.data.user));
+
+        setTimeout(() => {
           navigate("/");
         }, 1000);
       }
     } catch (error) {
       if (error.response && error.response.status === 401) {
-        toast.error("Invalid credentials. Please try again.");
+        toast.error("Invalid Login. Please try again.");
       } else {
-        toast.error("An error occurred. Please try again later.");
+        toast.error("Someting went wwrong, Please try again later.");
       }
     }
   };

@@ -5,17 +5,23 @@ import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Login from "./Authentication/Login.jsx";
 import Register from "./Authentication/Register.jsx";
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
+import PrivateRoute from "./PrivateRoutes/PrivateRoute.jsx";
 
 const routes = createBrowserRouter([
+  {
+    path: "/",
+    element: (
+      <PrivateRoute>
+        <App />
+      </PrivateRoute>
+    ),
+  },
   {
     path: "/login",
     element: <Login />,
   },
-  {
-    path: "/",
-    element: <App />,
-  },
+
   {
     path: "/register",
     element: <Register />,

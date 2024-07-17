@@ -12,9 +12,13 @@ const Register = () => {
     const form = e.target;
     const name = form.name.value;
     const mobile = form.mobile.value;
+    const image = form.image.files[0];
     const email = form.email.value;
     const pin = form.pin.value;
     const role = form.role.value;
+
+    const formData = new FormData();
+    formData.append("image", image);
 
     if (pin.length !== 5) {
       toast.warning("PIN should be exactly 5 digits");
@@ -26,9 +30,17 @@ const Register = () => {
       return;
     }
 
+    const { data } = await axios.post(
+      `https://api.imgbb.com/1/upload?key=${
+        import.meta.env.VITE_IMGBB_API_KEY
+      }`,
+      formData
+    );
+
     const allRegiData = {
       name,
       mobile,
+      image: data.data.display_url,
       email,
       pin,
       role,
@@ -42,7 +54,7 @@ const Register = () => {
       );
       if (res.data.insertedId) {
         toast.success("Registered user successfully");
-        setInterval(() => {
+        setTimeout(() => {
           navigate("/login");
         }, 1000);
       } else {
@@ -104,6 +116,19 @@ const Register = () => {
                 aria-label="email"
                 name="email"
                 required
+              />
+            </div>
+
+            <div>
+              <label htmlFor="image" className="block mb-2 text-sm">
+                Select Image:
+              </label>
+              <input
+                required
+                type="file"
+                id="image"
+                name="image"
+                accept="image/*"
               />
             </div>
 
