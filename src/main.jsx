@@ -7,8 +7,10 @@ import Register from "./Authentication/Register.jsx";
 import PrivateRoute from "./PrivateRoutes/PrivateRoute.jsx";
 import "react-toastify/dist/ReactToastify.css";
 import Dashboard from "./Layout/Dashboard.jsx";
+import { HelmetProvider } from "react-helmet-async";
 import UserManage from "./Pages/AdminDash/UserManage.jsx";
 import AdminWelcome from "./Pages/AdminDash/AdminWelcome.jsx";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const routes = createBrowserRouter([
   {
@@ -41,8 +43,14 @@ const routes = createBrowserRouter([
   },
 ]);
 
+const queryClient = new QueryClient();
+
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-    <RouterProvider router={routes}></RouterProvider>
-  </React.StrictMode>
+  <HelmetProvider>
+    <QueryClientProvider client={queryClient}>
+      <React.StrictMode>
+        <RouterProvider router={routes}></RouterProvider>
+      </React.StrictMode>
+    </QueryClientProvider>
+  </HelmetProvider>
 );
