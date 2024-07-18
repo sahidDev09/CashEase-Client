@@ -1,10 +1,14 @@
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Helmet } from "react-helmet";
+import { FaSearch } from "react-icons/fa";
 import { MdBlockFlipped } from "react-icons/md";
 import { VscLayersActive } from "react-icons/vsc";
 
 const UserManage = () => {
+  const [search, setSearch] = useState("");
+
   const { data: users = [] } = useQuery({
     queryKey: ["users"],
     queryFn: async () => {
@@ -13,12 +17,28 @@ const UserManage = () => {
     },
   });
 
-  console.log(users);
+  const filteredUsers = users.filter((user) =>
+    user.name.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
     <div className="bg-slate-50 p-4 rounded-md mt-14 md:mt-0">
       <Helmet>CashEase | Users</Helmet>
-      <h1 className="text-2xl">Total users: {users.length}</h1>
+      <div className="flex justify-between container mx-auto">
+        <h1 className="text-2xl">Total users: {filteredUsers.length}</h1>
+        <div className="flex gap-2">
+          <input
+            type="text"
+            className="input bg-slate-200 focus:outline-none"
+            placeholder="Search user name"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          <button className="btn bg-blue-500">
+            <FaSearch className="text-white" />
+          </button>
+        </div>
+      </div>
       <div>
         <div className="overflow-x-auto">
           <table className="table">
@@ -32,7 +52,7 @@ const UserManage = () => {
               </tr>
             </thead>
             <tbody>
-              {users.map((user, index) => (
+              {filteredUsers.map((user, index) => (
                 <tr key={user._id}>
                   <th>{index + 1}</th>
                   <td>
@@ -58,13 +78,11 @@ const UserManage = () => {
                       {user.status}
                     </span>
                   </td>
-
                   <td>
                     <span className="p-2 bg-slate-200 rounded-full px-4">
                       {user.role}
                     </span>
                   </td>
-
                   <th className="flex gap-2">
                     {user.status === "blocked" ? (
                       <button
